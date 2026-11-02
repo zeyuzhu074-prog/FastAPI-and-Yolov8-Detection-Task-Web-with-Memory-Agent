@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>历史记录 · 无人机智能巡检与目标检测系统</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app" id="app">
+        <aside class="sidebar" id="sidebar"></aside>
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <div class="main">
+            <header class="topbar" id="topbar"></header>
+
+            <main class="content">
+                <div class="page-head">
+                    <div>
+                        <div class="page-head__title">检测历史记录</div>
+                        <div class="page-head__sub" id="historySub">查看历史检测任务与结果明细</div>
+                    </div>
+                    <div class="page-head__actions">
+                        <div class="segmented" id="typeFilter">
+                            <button class="segmented__item is-active" type="button" data-type="">
+                                <i data-lucide="list"></i>全部
+                            </button>
+                            <button class="segmented__item" type="button" data-type="image">
+                                <i data-lucide="image"></i>图片
+                            </button>
+                            <button class="segmented__item" type="button" data-type="video">
+                                <i data-lucide="video"></i>视频
+                            </button>
+                        </div>
+                        <button class="btn" type="button" id="refreshBtn">
+                            <i data-lucide="refresh-cw"></i>刷新
+                        </button>
+                    </div>
+                </div>
+
+                <section class="grid-1">
+                    <div class="card">
+                        <div class="card__head">
+                            <div class="card__title">记录列表</div>
+                            <div class="card__tools">
+                                <span class="badge" id="countBadge">–</span>
+                            </div>
+                        </div>
+                        <div class="card__body card__body--flush">
+                            <div class="table-wrap">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>类型</th>
+                                            <th>原始文件</th>
+                                            <th>模型</th>
+                                            <th>状态</th>
+                                            <th class="num">目标数</th>
+                                            <th class="num">推理耗时</th>
+                                            <th>创建时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historyBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="hidden" id="historyEmpty">
+                                <div class="empty">
+                                    <i data-lucide="inbox"></i>
+                                    <div class="empty__title">暂无历史检测记录</div>
+                                    <div class="empty__hint">完成图片或视频检测后，记录会出现在这里</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card__head" style="border-top:1px solid var(--line-2);border-bottom:0" id="pagerBar">
+                            <span class="muted" id="pagerInfo">–</span>
+                            <div class="card__tools">
+                                <button class="btn btn--sm" type="button" id="prevBtn">
+                                    <i data-lucide="chevron-left"></i>上一页
+                                </button>
+                                <button class="btn btn--sm" type="button" id="nextBtn">
+                                    下一页<i data-lucide="chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div id="toastRoot" class="toast-root"></div>
+
+    <script src="vendor/lucide.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/history.js"></script>
+</body>
+</html>

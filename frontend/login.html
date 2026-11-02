@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录 · 无人机智能巡检与目标检测系统</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="login">
+        <!-- 左侧品牌区 -->
+        <aside class="login__aside">
+            <div class="login__brand">
+                <span class="brand__mark"><i data-lucide="radar"></i></span>
+                <div class="brand__text">
+                    <div class="brand__name">无人机智能巡检系统</div>
+                    <div class="brand__sub">UAV INSPECTION</div>
+                </div>
+            </div>
+
+            <div class="login__headline">
+                <div class="login__eyebrow">VisDrone · YOLOv8</div>
+                <h1 class="login__title">航拍目标检测<br>与巡检数据分析平台</h1>
+                <p class="login__desc">
+                    面向无人机航拍场景，提供图片与视频的实时目标检测、
+                    类别统计与历史数据分析能力。
+                </p>
+                <div class="login__facts">
+                    <div>
+                        <div class="login__fact-value">10</div>
+                        <div class="login__fact-label">VisDrone 目标类别</div>
+                    </div>
+                    <div>
+                        <div class="login__fact-value">YOLOv8m</div>
+                        <div class="login__fact-label">检测模型</div>
+                    </div>
+                    <div>
+                        <div class="login__fact-value">实时</div>
+                        <div class="login__fact-label">图片 / 视频推理</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 右侧表单区 -->
+        <main class="login__main">
+            <div class="login__form">
+                <h2 class="login__form-title" id="formTitle">欢迎回来</h2>
+                <p class="login__form-sub" id="formSub">请登录以进入巡检与检测控制台</p>
+
+                <div class="login__tabs">
+                    <button class="login__tab is-active" type="button" data-tab="login">登录</button>
+                    <button class="login__tab" type="button" data-tab="register">注册账号</button>
+                </div>
+
+                <!-- 登录表单 -->
+                <form id="loginForm" novalidate>
+                    <div class="field">
+                        <label class="field__label">用户名</label>
+                        <div class="input-affix">
+                            <i data-lucide="user"></i>
+                            <input class="input" type="text" name="username"
+                                   placeholder="请输入用户名" autocomplete="username">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="field__label">密码</label>
+                        <div class="input-affix">
+                            <i data-lucide="lock"></i>
+                            <input class="input" type="password" name="password"
+                                   placeholder="请输入密码" autocomplete="current-password"
+                                   style="padding-right:40px">
+                            <button class="input-affix__toggle" type="button" data-toggle-pwd>
+                                <i data-lucide="eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn--primary btn--lg btn--block" type="submit">
+                        <i data-lucide="log-in"></i>登 录
+                    </button>
+                </form>
+
+                <!-- 注册表单 -->
+                <form id="registerForm" class="hidden" novalidate>
+                    <div class="field">
+                        <label class="field__label">用户名</label>
+                        <div class="input-affix">
+                            <i data-lucide="user-plus"></i>
+                            <input class="input" type="text" name="username"
+                                   placeholder="3 - 50 位字符" autocomplete="username">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="field__label">密码</label>
+                        <div class="input-affix">
+                            <i data-lucide="lock"></i>
+                            <input class="input" type="password" name="password"
+                                   placeholder="不少于 6 位" autocomplete="new-password"
+                                   style="padding-right:40px">
+                            <button class="input-affix__toggle" type="button" data-toggle-pwd>
+                                <i data-lucide="eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="field__label">确认密码</label>
+                        <div class="input-affix">
+                            <i data-lucide="shield-check"></i>
+                            <input class="input" type="password" name="confirm"
+                                   placeholder="请再次输入密码" autocomplete="new-password"
+                                   style="padding-right:40px">
+                            <button class="input-affix__toggle" type="button" data-toggle-pwd>
+                                <i data-lucide="eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn--primary btn--lg btn--block" type="submit">
+                        <i data-lucide="user-plus"></i>注 册
+                    </button>
+                </form>
+
+                <div class="login__foot">
+                    <i data-lucide="info"></i>
+                    <span id="footHint">默认管理员账号：admin / 123456</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="vendor/lucide.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

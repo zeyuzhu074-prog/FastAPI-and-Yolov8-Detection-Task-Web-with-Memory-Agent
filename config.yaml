@@ -1,0 +1,48 @@
+# UAV智能巡检系统配置文件
+
+system:
+  name: "无人机智能巡检与目标检测系统"
+  version: "1.0.0"
+  debug: true
+
+server:
+  host: "127.0.0.1"
+  port: 8000
+
+database:
+  url: "sqlite:///./uav_inspection.db"
+
+model:
+  # 默认使用visdrone_yolov8m
+  path: "models/pretrained/visdrone_yolov8m.pt"
+
+  # 置信度阈值
+  confidence: 0.25
+
+  # IoU阈值
+  iou: 0.45
+
+  # 推理图像尺寸
+  image_size: 640
+
+upload:
+  max_size_mb: 500
+
+  image_extensions:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+
+  video_extensions:
+    - ".mp4"
+    - ".avi"
+    - ".mov"
+    - ".mkv"
+
+storage:
+  original_dir: "uploads/original"
+  result_dir: "uploads/results"
+
+logging:
+  level: "INFO"
+  file: "logs/system.log"

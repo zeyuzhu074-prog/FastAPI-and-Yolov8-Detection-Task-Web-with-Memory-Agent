@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>统计分析 · 无人机智能巡检与目标检测系统</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app" id="app">
+        <aside class="sidebar" id="sidebar"></aside>
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <div class="main">
+            <header class="topbar" id="topbar"></header>
+
+            <main class="content">
+                <div class="page-head">
+                    <div>
+                        <div class="page-head__title">今日检测数据概览</div>
+                        <div class="page-head__sub" id="overviewSub">正在加载统计数据…</div>
+                    </div>
+                    <div class="page-head__actions">
+                        <span class="badge" id="todayBadge"></span>
+                        <button class="btn" type="button" id="refreshBtn">
+                            <i data-lucide="refresh-cw"></i>刷新数据
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 概览卡片 -->
+                <section class="stat-grid" id="statGrid">
+                    <div class="stat">
+                        <div class="stat__icon"><i data-lucide="clipboard-list"></i></div>
+                        <div class="stat__meta">
+                            <div class="stat__label">今日检测任务</div>
+                            <div class="stat__value" data-stat="todayTasks">–</div>
+                            <div class="stat__foot" data-foot="todayTasks">&nbsp;</div>
+                        </div>
+                    </div>
+                    <div class="stat stat--amber">
+                        <div class="stat__icon"><i data-lucide="target"></i></div>
+                        <div class="stat__meta">
+                            <div class="stat__label">今日检测目标</div>
+                            <div class="stat__value" data-stat="todayObjects">–</div>
+                            <div class="stat__foot" data-foot="todayObjects">&nbsp;</div>
+                        </div>
+                    </div>
+                    <div class="stat stat--sky">
+                        <div class="stat__icon"><i data-lucide="layers"></i></div>
+                        <div class="stat__meta">
+                            <div class="stat__label">累计检测任务</div>
+                            <div class="stat__value" data-stat="totalTasks">–</div>
+                            <div class="stat__foot" data-foot="totalTasks">&nbsp;</div>
+                        </div>
+                    </div>
+                    <div class="stat stat--violet">
+                        <div class="stat__icon"><i data-lucide="scan-eye"></i></div>
+                        <div class="stat__meta">
+                            <div class="stat__label">累计检测目标</div>
+                            <div class="stat__value" data-stat="totalObjects">–</div>
+                            <div class="stat__foot" data-foot="totalObjects">&nbsp;</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 饼图 + 条形图 -->
+                <section class="grid-2">
+                    <div class="card">
+                        <div class="card__head">
+                            <div>
+                                <div class="card__title">今日目标占比</div>
+                                <div class="card__sub" id="pieSub">按目标类别统计</div>
+                            </div>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart" id="pieChart"></div>
+                            <div class="empty hidden" id="pieEmpty">
+                                <i data-lucide="pie-chart"></i>
+                                <div class="empty__title">今日暂无检测数据</div>
+                                <div class="empty__hint">完成一次图片或视频检测后即可查看</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__head">
+                            <div>
+                                <div class="card__title">今日类别数量</div>
+                                <div class="card__sub" id="barSub">各类别目标检出数量</div>
+                            </div>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart" id="barChart"></div>
+                            <div class="empty hidden" id="barEmpty">
+                                <i data-lucide="bar-chart-3"></i>
+                                <div class="empty__title">今日暂无检测数据</div>
+                                <div class="empty__hint">完成一次图片或视频检测后即可查看</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 每日目标总数 -->
+                <section class="grid-1">
+                    <div class="card">
+                        <div class="card__head">
+                            <div>
+                                <div class="card__title">每日目标总数走势</div>
+                                <div class="card__sub">按日期统计检测目标总数与检测次数</div>
+                            </div>
+                            <div class="card__tools">
+                                <span class="badge" id="trendBadge"></span>
+                            </div>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart chart--tall" id="trendChart"></div>
+                            <div class="empty hidden" id="trendEmpty">
+                                <i data-lucide="line-chart"></i>
+                                <div class="empty__title">暂无历史检测数据</div>
+                                <div class="empty__hint">检测记录会按日期自动汇总到这里</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 各类别走势 -->
+                <section class="grid-1">
+                    <div class="card">
+                        <div class="card__head">
+                            <div>
+                                <div class="card__title">各类别每日数量变化趋势</div>
+                                <div class="card__sub">点击图例可单独查看某一类别</div>
+                            </div>
+                            <div class="card__tools">
+                                <span class="badge" id="classBadge"></span>
+                            </div>
+                        </div>
+                        <div class="card__body">
+                            <div class="chart chart--tall" id="classChart"></div>
+                            <div class="empty hidden" id="classEmpty">
+                                <i data-lucide="activity"></i>
+                                <div class="empty__title">暂无类别趋势数据</div>
+                                <div class="empty__hint">检测出目标后即可查看各类别走势</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div id="toastRoot" class="toast-root"></div>
+
+    <script src="vendor/echarts.min.js"></script>
+    <script src="vendor/lucide.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/statistics.js"></script>
+</body>
+</html>
