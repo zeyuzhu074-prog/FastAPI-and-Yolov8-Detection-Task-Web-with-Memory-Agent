@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+logs/*.log
+
+# Uploaded files
+uploads/original/*
+uploads/results/*
+uploads/avatars/*
+
+# Model weights
+models/pretrained/*.pt
+models/finetuned/**/*.pt
+
+# Dataset
+data/raw/*
+data/processed/*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+.pytest_cache/
+.coverage
+
+# Ultralytics runtime settings
+.ultralytics/
+
+# Temporary
+*.tmp
+*.temp

@@ -1,0 +1,73 @@
+# UAV智能巡检系统配置文件
+
+system:
+  name: "无人机智能巡检与目标检测系统"
+  version: "1.0.0"
+  debug: true
+
+server:
+  host: "127.0.0.1"
+  port: 8000
+  # 用于邮件正文中的系统访问地址
+  public_base_url: "http://127.0.0.1:8000"
+
+database:
+  url: "sqlite:///./uav_inspection.db"
+
+security:
+  # 生产环境请通过环境变量 UAV_JWT_SECRET 覆盖
+  jwt_secret: "uav-inspection-dev-secret-change-me"
+  jwt_algorithm: "HS256"
+  jwt_expire_minutes: 1440
+
+smtp:
+  # 163 邮箱示例：smtp.163.com + SSL 465
+  host: "smtp.163.com"
+  port: 465
+  use_ssl: true
+  # 账号与授权码通过环境变量 UAV_SMTP_USER / UAV_SMTP_PASSWORD 提供
+  username: "17742850036@163.com"
+  password: "QEcCPJzp7sAC2XmQ"
+  from_name: "无人机智能巡检系统"
+
+model:
+  path: "models/pretrained/yolov8m.pt"
+
+  # 置信度阈值
+  confidence: 0.25
+
+  # IoU阈值
+  iou: 0.45
+
+  # 推理图像尺寸
+  image_size: 640
+
+upload:
+  max_size_mb: 500
+  max_avatar_size_mb: 2
+
+  image_extensions:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+
+  avatar_extensions:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".webp"
+
+  video_extensions:
+    - ".mp4"
+    - ".avi"
+    - ".mov"
+    - ".mkv"
+
+storage:
+  original_dir: "uploads/original"
+  result_dir: "uploads/results"
+  avatar_dir: "uploads/avatars"
+
+logging:
+  level: "INFO"
+  file: "logs/system.log"

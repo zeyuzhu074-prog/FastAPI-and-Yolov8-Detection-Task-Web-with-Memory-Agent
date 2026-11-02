@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>管理员后台 · 无人机智能巡检与目标检测系统</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app" id="app">
+        <aside class="sidebar" id="sidebar"></aside>
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <div class="main">
+            <header class="topbar" id="topbar"></header>
+
+            <main class="content">
+                <div class="page-head">
+                    <div>
+                        <div class="page-head__title">管理员后台</div>
+                        <div class="page-head__sub">用户管理与检测记录管理</div>
+                    </div>
+                    <div class="page-head__actions">
+                        <div class="segmented" id="adminTabs">
+                            <button class="segmented__item is-active" type="button" data-tab="users">
+                                <i data-lucide="users"></i>用户管理
+                            </button>
+                            <button class="segmented__item" type="button" data-tab="records">
+                                <i data-lucide="history"></i>检测记录
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 用户管理 -->
+                <section id="usersPanel">
+                    <div class="card">
+                        <div class="card__head">
+                            <div class="card__title">用户列表</div>
+                            <div class="card__tools">
+                                <span class="badge" id="userCountBadge">–</span>
+                                <button class="btn btn--sm" type="button" id="refreshUsersBtn">
+                                    <i data-lucide="refresh-cw"></i>刷新
+                                </button>
+                                <button class="btn btn--sm btn--primary" type="button" id="addUserBtn">
+                                    <i data-lucide="user-plus"></i>新增用户
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card__body card__body--flush">
+                            <div class="filter-bar">
+                                <div class="filter-grid">
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">关键词</label>
+                                        <input class="input" type="text" id="userKeyword"
+                                               placeholder="用户名或邮箱">
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">状态</label>
+                                        <select class="select" id="userStatusFilter">
+                                            <option value="">全部</option>
+                                            <option value="1">正常</option>
+                                            <option value="0">已禁用</option>
+                                        </select>
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">角色</label>
+                                        <select class="select" id="userRoleFilter">
+                                            <option value="">全部</option>
+                                            <option value="user">普通用户</option>
+                                            <option value="admin">管理员</option>
+                                        </select>
+                                    </div>
+                                    <div class="filter-actions">
+                                        <button class="btn btn--primary" type="button" id="searchUsersBtn">
+                                            <i data-lucide="search"></i>查询
+                                        </button>
+                                        <button class="btn" type="button" id="resetUsersBtn">重置</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-wrap">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>用户名</th>
+                                            <th>邮箱</th>
+                                            <th>角色</th>
+                                            <th>状态</th>
+                                            <th class="num">记录数</th>
+                                            <th>创建时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="hidden" id="usersEmpty">
+                                <div class="empty">
+                                    <i data-lucide="users"></i>
+                                    <div class="empty__title">没有匹配的用户</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card__head pager-bar">
+                            <span class="muted" id="usersPagerInfo">–</span>
+                            <div class="card__tools">
+                                <button class="btn btn--sm" type="button" id="usersPrevBtn">
+                                    <i data-lucide="chevron-left"></i>上一页
+                                </button>
+                                <button class="btn btn--sm" type="button" id="usersNextBtn">
+                                    下一页<i data-lucide="chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 检测记录管理 -->
+                <section id="recordsPanel" class="hidden">
+                    <div class="card">
+                        <div class="card__head">
+                            <div class="card__title">全部检测记录</div>
+                            <div class="card__tools">
+                                <span class="badge" id="recordCountBadge">–</span>
+                            </div>
+                        </div>
+                        <div class="card__body card__body--flush">
+                            <div class="filter-bar">
+                                <div class="filter-grid filter-grid--wide">
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">用户名</label>
+                                        <input class="input" type="text" id="recordUsername"
+                                               placeholder="按用户名筛选">
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">文件名</label>
+                                        <input class="input" type="text" id="recordFilename"
+                                               placeholder="按文件名模糊查询">
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">开始日期</label>
+                                        <input class="input" type="date" id="recordStart">
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">结束日期</label>
+                                        <input class="input" type="date" id="recordEnd">
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">类型</label>
+                                        <select class="select" id="recordType">
+                                            <option value="">全部</option>
+                                            <option value="image">图片</option>
+                                            <option value="video">视频</option>
+                                        </select>
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">状态</label>
+                                        <select class="select" id="recordStatus">
+                                            <option value="">全部</option>
+                                            <option value="completed">已完成</option>
+                                            <option value="processing">处理中</option>
+                                            <option value="failed">失败</option>
+                                        </select>
+                                    </div>
+                                    <div class="filter-actions">
+                                        <button class="btn btn--primary" type="button" id="searchRecordsBtn">
+                                            <i data-lucide="search"></i>查询
+                                        </button>
+                                        <button class="btn" type="button" id="resetRecordsBtn">重置</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-wrap">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>用户</th>
+                                            <th>类型</th>
+                                            <th>文件名</th>
+                                            <th>状态</th>
+                                            <th class="num">目标数</th>
+                                            <th>创建时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recordsBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="hidden" id="recordsEmpty">
+                                <div class="empty">
+                                    <i data-lucide="inbox"></i>
+                                    <div class="empty__title">没有匹配的检测记录</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card__head pager-bar">
+                            <span class="muted" id="recordsPagerInfo">–</span>
+                            <div class="card__tools">
+                                <button class="btn btn--sm" type="button" id="recordsPrevBtn">
+                                    <i data-lucide="chevron-left"></i>上一页
+                                </button>
+                                <button class="btn btn--sm" type="button" id="recordsNextBtn">
+                                    下一页<i data-lucide="chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- 用户新增/编辑 -->
+    <div class="modal" id="userModal">
+        <div class="modal__card">
+            <div class="modal__head">
+                <div class="modal__title" id="userModalTitle">新增用户</div>
+                <button class="modal__close" type="button" data-close><i data-lucide="x"></i></button>
+            </div>
+            <form id="userForm" novalidate>
+                <div class="modal__body">
+                    <input type="hidden" name="user_id">
+                    <div class="field">
+                        <label class="field__label">用户名</label>
+                        <input class="input" type="text" name="username" placeholder="3 - 50 位字符">
+                    </div>
+                    <div class="field">
+                        <label class="field__label">邮箱</label>
+                        <input class="input" type="email" name="email" placeholder="选填">
+                    </div>
+                    <div class="field" id="userPasswordField">
+                        <label class="field__label">初始密码</label>
+                        <input class="input" type="password" name="password" placeholder="不少于 6 位">
+                    </div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label class="field__label">角色</label>
+                            <select class="select" name="role">
+                                <option value="user">普通用户</option>
+                                <option value="admin">管理员</option>
+                            </select>
+                        </div>
+                        <div class="field" id="userStatusField">
+                            <label class="field__label">状态</label>
+                            <select class="select" name="status">
+                                <option value="1">正常</option>
+                                <option value="0">已禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal__foot">
+                    <button class="btn" type="button" data-close>取消</button>
+                    <button class="btn btn--primary" type="submit">
+                        <i data-lucide="check"></i>保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 重置密码 -->
+    <div class="modal" id="resetPwdModal">
+        <div class="modal__card">
+            <div class="modal__head">
+                <div class="modal__title" id="resetPwdTitle">重置密码</div>
+                <button class="modal__close" type="button" data-close><i data-lucide="x"></i></button>
+            </div>
+            <form id="resetPwdForm" novalidate>
+                <div class="modal__body">
+                    <input type="hidden" name="user_id">
+                    <div class="field">
+                        <label class="field__label">新密码</label>
+                        <input class="input" type="password" name="new_password"
+                               placeholder="不少于 6 位">
+                        <div class="field__hint">重置后该用户需使用新密码重新登录。</div>
+                    </div>
+                </div>
+                <div class="modal__foot">
+                    <button class="btn" type="button" data-close>取消</button>
+                    <button class="btn btn--primary" type="submit">
+                        <i data-lucide="key-round"></i>确认重置
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 修改检测记录 -->
+    <div class="modal" id="recordModal">
+        <div class="modal__card">
+            <div class="modal__head">
+                <div class="modal__title" id="recordModalTitle">修改检测记录</div>
+                <button class="modal__close" type="button" data-close><i data-lucide="x"></i></button>
+            </div>
+            <form id="recordForm" novalidate>
+                <div class="modal__body">
+                    <input type="hidden" name="record_id">
+                    <div class="field">
+                        <label class="field__label">原始文件名</label>
+                        <input class="input" type="text" name="original_name">
+                    </div>
+                    <div class="field">
+                        <label class="field__label">备注</label>
+                        <input class="input" type="text" name="remark" placeholder="选填，最多 500 字">
+                    </div>
+                    <div class="field">
+                        <label class="field__label">状态</label>
+                        <select class="select" name="status">
+                            <option value="completed">已完成</option>
+                            <option value="processing">处理中</option>
+                            <option value="failed">失败</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal__foot">
+                    <button class="btn" type="button" data-close>取消</button>
+                    <button class="btn btn--primary" type="submit">
+                        <i data-lucide="check"></i>保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastRoot" class="toast-root"></div>
+
+    <script src="vendor/lucide.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>个人中心 · 无人机智能巡检与目标检测系统</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app" id="app">
+        <aside class="sidebar" id="sidebar"></aside>
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <div class="main">
+            <header class="topbar" id="topbar"></header>
+
+            <main class="content">
+                <div class="page-head">
+                    <div>
+                        <div class="page-head__title">个人中心</div>
+                        <div class="page-head__sub">管理账号资料、头像与登录密码</div>
+                    </div>
+                </div>
+
+                <section class="profile-grid">
+                    <div class="card profile-card">
+                        <div class="card__body profile-card__body">
+                            <div class="profile-avatar" id="profileAvatar">U</div>
+                            <div class="profile-name" id="profileName">加载中…</div>
+                            <div class="profile-role" id="profileRole">-</div>
+
+                            <div class="profile-meta">
+                                <div class="profile-meta__row">
+                                    <span>邮箱</span>
+                                    <strong id="profileEmail">-</strong>
+                                </div>
+                                <div class="profile-meta__row">
+                                    <span>注册时间</span>
+                                    <strong id="profileCreated">-</strong>
+                                </div>
+                            </div>
+
+                            <div class="avatar-actions">
+                                <button class="btn btn--sm" type="button" id="uploadAvatarBtn">
+                                    <i data-lucide="image-up"></i>上传头像
+                                </button>
+                                <button class="btn btn--sm" type="button" id="deleteAvatarBtn">
+                                    <i data-lucide="trash-2"></i>删除头像
+                                </button>
+                                <input type="file" id="avatarInput" class="hidden"
+                                       accept=".jpg,.jpeg,.png,.webp">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__head">
+                            <div>
+                                <div class="card__title">编辑资料</div>
+                                <div class="card__sub">修改用户名或绑定邮箱</div>
+                            </div>
+                        </div>
+                        <div class="card__body">
+                            <form id="profileForm" novalidate>
+                                <div class="field">
+                                    <label class="field__label">用户名</label>
+                                    <div class="input-affix">
+                                        <i data-lucide="user-round"></i>
+                                        <input class="input" type="text" name="username"
+                                               placeholder="3 - 50 位字符">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="field__label">邮箱</label>
+                                    <div class="input-affix">
+                                        <i data-lucide="mail"></i>
+                                        <input class="input" type="email" name="email"
+                                               placeholder="用于接收检测报告">
+                                    </div>
+                                    <div class="field__hint">
+                                        检测报告可发送到该邮箱；未填写时需要在发送时手动输入。
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <button class="btn btn--primary" type="submit">
+                                        <i data-lucide="save"></i>保存修改
+                                    </button>
+                                    <button class="btn" type="button" id="changePwdBtn">
+                                        <i data-lucide="key-round"></i>修改密码
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="grid-1">
+                    <div class="card">
+                        <div class="card__head">
+                            <div class="card__title">账号信息</div>
+                        </div>
+                        <div class="card__body">
+                            <div class="dl">
+                                <div class="dl__item">
+                                    <div class="dl__k">用户 ID</div>
+                                    <div class="dl__v" id="infoId">-</div>
+                                </div>
+                                <div class="dl__item">
+                                    <div class="dl__k">角色</div>
+                                    <div class="dl__v" id="infoRole">-</div>
+                                </div>
+                                <div class="dl__item">
+                                    <div class="dl__k">状态</div>
+                                    <div class="dl__v" id="infoStatus">-</div>
+                                </div>
+                                <div class="dl__item">
+                                    <div class="dl__k">最后更新</div>
+                                    <div class="dl__v" id="infoUpdated">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div id="toastRoot" class="toast-root"></div>
+
+    <script src="vendor/lucide.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
