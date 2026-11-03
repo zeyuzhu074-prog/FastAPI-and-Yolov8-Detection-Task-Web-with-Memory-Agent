@@ -318,9 +318,7 @@ class HistoryService:
             target_type="detection_record",
             target_id=record.id,
             description=(
-                f"修改检测记录 #{record.id}："
-                f"name={record.original_name}, "
-                f"status={record.status}"
+                f"修改检测记录"
             ),
         )
 
@@ -393,7 +391,7 @@ class HistoryService:
             operation_type="delete",
             target_type="detection_record",
             target_id=record_id,
-            description=f"删除检测记录 #{record_id}（{original_name}）",
+            description=f"删除检测记录",
         )
 
         return {

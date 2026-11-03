@@ -8,6 +8,7 @@ from backend.database.database import get_db
 from backend.dependencies.auth import require_admin
 from backend.models.user import User
 from backend.services.admin_service import AdminService
+from backend.services.audit_service import AuditService
 
 
 router = APIRouter(
@@ -72,6 +73,53 @@ def list_users(
         raise HTTPException(
             status_code=500,
             detail=f"用户列表查询失败：{str(e)}",
+        )
+
+
+@router.get("/logs")
+def list_operation_logs(
+    page: int = 1,
+    page_size: int = 20,
+    operation_type: Optional[str] = None,
+    target_type: Optional[str] = None,
+    admin_id: Optional[int] = None,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    keyword: Optional[str] = None,
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_admin),
+):
+    """
+    查询管理员操作审计日志。
+    """
+
+    try:
+
+        data = AuditService.list_logs(
+            db=db,
+            page=page,
+            page_size=page_size,
+            operation_type=operation_type,
+            target_type=target_type,
+            admin_id=admin_id,
+            start_date=start_date,
+            end_date=end_date,
+            keyword=keyword,
+        )
+
+        return {
+            "success": True,
+            "message": "操作日志查询成功",
+            "data": data,
+        }
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"操作日志查询失败：{str(e)}",
         )
 
 

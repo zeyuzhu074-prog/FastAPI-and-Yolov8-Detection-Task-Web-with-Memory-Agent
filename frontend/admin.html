@@ -29,6 +29,9 @@
                             <button class="segmented__item" type="button" data-tab="records">
                                 <i data-lucide="history"></i>检测记录
                             </button>
+                            <button class="segmented__item" type="button" data-tab="logs">
+                                <i data-lucide="scroll-text"></i>操作审计
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -206,6 +209,108 @@
                                     <i data-lucide="chevron-left"></i>上一页
                                 </button>
                                 <button class="btn btn--sm" type="button" id="recordsNextBtn">
+                                    下一页<i data-lucide="chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 操作审计 -->
+                <section id="logsPanel" class="hidden">
+                    <div class="card">
+                        <div class="card__head">
+                            <div>
+                                <div class="card__title">管理员操作日志</div>
+                                <div class="card__sub">
+                                    记录管理员在系统管理过程中执行的操作
+                                </div>
+                            </div>
+                            <div class="card__tools">
+                                <span class="badge" id="logCountBadge">–</span>
+                                <button class="btn btn--sm" type="button" id="refreshLogsBtn">
+                                    <i data-lucide="refresh-cw"></i>刷新
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card__body card__body--flush">
+                            <div class="filter-bar">
+                                <div class="filter-grid filter-grid--wide">
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">操作类型</label>
+                                        <select class="select" id="logOperationType">
+                                            <option value="">全部</option>
+                                            <option value="create">创建</option>
+                                            <option value="update">修改</option>
+                                            <option value="delete">删除</option>
+                                            <option value="disable">禁用</option>
+                                            <option value="enable">启用</option>
+                                            <option value="reset_password">重置密码</option>
+                                        </select>
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">对象类型</label>
+                                        <select class="select" id="logTargetType">
+                                            <option value="">全部</option>
+                                            <option value="user">用户</option>
+                                            <option value="detection_record">检测记录</option>
+                                        </select>
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">开始日期</label>
+                                        <input class="input" type="date" id="logStart">
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">结束日期</label>
+                                        <input class="input" type="date" id="logEnd">
+                                    </div>
+                                    <div class="field" style="margin:0">
+                                        <label class="field__label">关键词</label>
+                                        <input class="input" type="text" id="logKeyword"
+                                               placeholder="按操作描述查询">
+                                    </div>
+                                    <div class="filter-actions">
+                                        <button class="btn btn--primary" type="button" id="searchLogsBtn">
+                                            <i data-lucide="search"></i>查询
+                                        </button>
+                                        <button class="btn" type="button" id="resetLogsBtn">重置</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-wrap" id="logsTableWrap">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>管理员</th>
+                                            <th>操作类型</th>
+                                            <th>对象类型</th>
+                                            <th class="num">对象 ID</th>
+                                            <th>操作描述</th>
+                                            <th>操作时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="logsBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="hidden" id="logsEmpty">
+                                <div class="empty">
+                                    <i data-lucide="scroll-text"></i>
+                                    <div class="empty__title">暂无操作日志</div>
+                                    <div class="empty__hint">
+                                        管理员执行用户管理或检测记录管理操作后，日志会出现在这里
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card__head pager-bar">
+                            <span class="muted" id="logsPagerInfo">–</span>
+                            <div class="card__tools">
+                                <button class="btn btn--sm" type="button" id="logsPrevBtn">
+                                    <i data-lucide="chevron-left"></i>上一页
+                                </button>
+                                <button class="btn btn--sm" type="button" id="logsNextBtn">
                                     下一页<i data-lucide="chevron-right"></i>
                                 </button>
                             </div>

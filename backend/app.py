@@ -25,9 +25,9 @@ from backend.config.settings import AVATAR_DIR
 # ==========================================
 
 # 先执行第一轮结构迁移，再创建缺失的表
-ensure_schema()
+#ensure_schema()
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 
 # ==========================================
@@ -77,11 +77,25 @@ app.include_router(
 app.include_router(
     statistics_router
 )
+# ==========================================
+# 历史记录接口
+# ==========================================
 app.include_router(
     history_router
 )
+# ==========================================
+# 个人信息接口
+# ==========================================
 app.include_router(profile_router)
+
+# ==========================================
+# 历史记录接口
+# ==========================================
 app.include_router(admin_router)
+
+# ==========================================
+# 邮箱发送接口
+# ==========================================
 app.include_router(email_router)
 
 

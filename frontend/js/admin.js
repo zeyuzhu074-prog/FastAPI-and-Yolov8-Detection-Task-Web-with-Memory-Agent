@@ -34,6 +34,17 @@
             total: 0,
             pages: 0
         },
+        logs: {
+            page: 1,
+            pageSize: 20,
+            operationType: "",
+            targetType: "",
+            start: "",
+            end: "",
+            keyword: "",
+            total: 0,
+            pages: 0
+        },
         userMap: {},
         recordMap: {}
     };
@@ -41,6 +52,7 @@
     const el = {
         usersPanel: document.getElementById("usersPanel"),
         recordsPanel: document.getElementById("recordsPanel"),
+        logsPanel: document.getElementById("logsPanel"),
         usersBody: document.getElementById("usersBody"),
         usersEmpty: document.getElementById("usersEmpty"),
         usersTableWrap: document.querySelector("#usersPanel .table-wrap"),
@@ -58,6 +70,18 @@
         recordsPagerInfo: document.getElementById("recordsPagerInfo"),
         recordsPrevBtn: document.getElementById("recordsPrevBtn"),
         recordsNextBtn: document.getElementById("recordsNextBtn"),
+        logsBody: document.getElementById("logsBody"),
+        logsEmpty: document.getElementById("logsEmpty"),
+        logsTableWrap: document.getElementById("logsTableWrap"),
+        logCountBadge: document.getElementById("logCountBadge"),
+        logsPagerInfo: document.getElementById("logsPagerInfo"),
+        logsPrevBtn: document.getElementById("logsPrevBtn"),
+        logsNextBtn: document.getElementById("logsNextBtn"),
+        logOperationType: document.getElementById("logOperationType"),
+        logTargetType: document.getElementById("logTargetType"),
+        logStart: document.getElementById("logStart"),
+        logEnd: document.getElementById("logEnd"),
+        logKeyword: document.getElementById("logKeyword"),
         recordUsername: document.getElementById("recordUsername"),
         recordFilename: document.getElementById("recordFilename"),
         recordStart: document.getElementById("recordStart"),
@@ -119,6 +143,30 @@
             return '<span class="badge badge--ok">正常</span>';
         }
         return '<span class="badge badge--err">已禁用</span>';
+    }
+
+    const OPERATION = {
+        create: { cls: "badge--ok", text: "创建" },
+        update: { cls: "badge--image", text: "修改" },
+        delete: { cls: "badge--err", text: "删除" },
+        disable: { cls: "badge--warn", text: "禁用" },
+        enable: { cls: "badge--ok", text: "启用" },
+        reset_password: { cls: "badge--video", text: "重置密码" }
+    };
+
+    const TARGET_TYPES = {
+        user: "用户",
+        detection_record: "检测记录"
+    };
+
+    function operationBadge(type) {
+        const item = OPERATION[type] || { cls: "", text: type || "-" };
+        return '<span class="badge ' + item.cls + '">' +
+            App.escapeHtml(item.text) + "</span>";
+    }
+
+    function targetTypeLabel(type) {
+        return TARGET_TYPES[type] || type || "-";
     }
 
     /* ---------------- 用户管理 ---------------- */
@@ -254,6 +302,7 @@
 
             closeModal(el.userModal);
             loadUsers();
+            loadLogs();
         } catch (err) {
             App.toast(err.message, "err");
         }
@@ -267,6 +316,7 @@
             });
             App.toast(status === 1 ? "用户已启用" : "用户已禁用", "ok");
             loadUsers();
+            loadLogs();
         } catch (err) {
             App.toast(err.message, "err");
         }
@@ -300,6 +350,7 @@
             );
             App.toast("密码已重置", "ok");
             closeModal(el.resetPwdModal);
+            loadLogs();
         } catch (err) {
             App.toast(err.message, "err");
         }
@@ -319,6 +370,7 @@
             App.toast("用户已删除", "ok");
             loadUsers();
             loadRecords();
+            loadLogs();
         } catch (err) {
             App.toast(err.message, "err");
         }
@@ -391,6 +443,67 @@
         }
     }
 
+    /* ---------------- 操作审计 ---------------- */
+
+    function renderLogs(data) {
+        const items = data.items || [];
+
+        state.logs.total = data.total || 0;
+        state.logs.pages = Math.max(1, data.pages || 1);
+        state.logs.page = data.page || 1;
+
+        el.logsTableWrap.classList.toggle("hidden", items.length === 0);
+        el.logsEmpty.classList.toggle("hidden", items.length > 0);
+
+        el.logsBody.innerHTML = items.map(function (log) {
+            const adminName = log.admin_username || ("#" + log.admin_id);
+            const targetId = (
+                log.target_id === null ||
+                log.target_id === undefined
+            ) ? "-" : log.target_id;
+
+            return (
+                "<tr>" +
+                '<td class="num">' + log.id + "</td>" +
+                '<td class="name">' + App.escapeHtml(adminName) + "</td>" +
+                "<td>" + operationBadge(log.operation_type) + "</td>" +
+                "<td>" + App.escapeHtml(targetTypeLabel(log.target_type)) + "</td>" +
+                '<td class="num">' + targetId + "</td>" +
+                '<td class="name" title="' + App.escapeHtml(log.description || "") + '">' +
+                App.escapeHtml(log.description || "-") + "</td>" +
+                '<td class="muted">' + App.formatDateTime(log.created_at) + "</td>" +
+                "</tr>"
+            );
+        }).join("");
+
+        el.logCountBadge.textContent = "共 " + state.logs.total + " 条日志";
+        el.logsPagerInfo.textContent = "第 " + state.logs.page + " / " +
+            state.logs.pages + " 页";
+        el.logsPrevBtn.disabled = state.logs.page <= 1;
+        el.logsNextBtn.disabled = state.logs.page >= state.logs.pages;
+
+        App.icons();
+    }
+
+    async function loadLogs() {
+        try {
+            const res = await App.api("/api/admin/logs", {
+                query: {
+                    page: state.logs.page,
+                    page_size: state.logs.pageSize,
+                    operation_type: state.logs.operationType,
+                    target_type: state.logs.targetType,
+                    start_date: state.logs.start,
+                    end_date: state.logs.end,
+                    keyword: state.logs.keyword
+                }
+            });
+            renderLogs(pick(res) || {});
+        } catch (err) {
+            App.toast(err.message, "err");
+        }
+    }
+
     function openRecordModal(record) {
         el.recordForm.reset();
         el.recordForm.record_id.value = record.id;
@@ -418,6 +531,7 @@
             App.toast("检测记录已修改", "ok");
             closeModal(el.recordModal);
             loadRecords();
+            loadLogs();
         } catch (err) {
             App.toast(err.message, "err");
         }
@@ -436,6 +550,7 @@
             });
             App.toast("检测记录已删除", "ok");
             loadRecords();
+            loadLogs();
         } catch (err) {
             App.toast(err.message, "err");
         }
@@ -455,6 +570,7 @@
 
         el.usersPanel.classList.toggle("hidden", tab !== "users");
         el.recordsPanel.classList.toggle("hidden", tab !== "records");
+        el.logsPanel.classList.toggle("hidden", tab !== "logs");
     }
 
     document.querySelectorAll("#adminTabs .segmented__item").forEach(function (btn) {
@@ -536,6 +652,43 @@
         }
     });
 
+    document.getElementById("refreshLogsBtn").addEventListener("click", loadLogs);
+    document.getElementById("searchLogsBtn").addEventListener("click", function () {
+        state.logs.operationType = el.logOperationType.value;
+        state.logs.targetType = el.logTargetType.value;
+        state.logs.start = el.logStart.value;
+        state.logs.end = el.logEnd.value;
+        state.logs.keyword = el.logKeyword.value.trim();
+        state.logs.page = 1;
+        loadLogs();
+    });
+    document.getElementById("resetLogsBtn").addEventListener("click", function () {
+        el.logOperationType.value = "";
+        el.logTargetType.value = "";
+        el.logStart.value = "";
+        el.logEnd.value = "";
+        el.logKeyword.value = "";
+        state.logs.operationType = "";
+        state.logs.targetType = "";
+        state.logs.start = "";
+        state.logs.end = "";
+        state.logs.keyword = "";
+        state.logs.page = 1;
+        loadLogs();
+    });
+    el.logsPrevBtn.addEventListener("click", function () {
+        if (state.logs.page > 1) {
+            state.logs.page--;
+            loadLogs();
+        }
+    });
+    el.logsNextBtn.addEventListener("click", function () {
+        if (state.logs.page < state.logs.pages) {
+            state.logs.page++;
+            loadLogs();
+        }
+    });
+
     document.addEventListener("click", function (e) {
         const editUser = e.target.closest("[data-edit-user]");
         if (editUser) {
@@ -591,4 +744,5 @@
 
     loadUsers();
     loadRecords();
+    loadLogs();
 })();

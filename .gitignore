@@ -43,6 +43,7 @@ Thumbs.db
 
 # Ultralytics runtime settings
 .ultralytics/
+Ultralytics/
 
 # Temporary
 *.tmp
