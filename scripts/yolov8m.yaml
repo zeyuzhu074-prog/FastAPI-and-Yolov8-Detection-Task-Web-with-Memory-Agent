@@ -1,0 +1,51 @@
+# YOLOv8m architecture definition (Ultralytics-style)
+# nc is overridden by the dataset YAML during training.
+nc: 10
+
+names:
+  0: pedestrian
+  1: people
+  2: bicycle
+  3: car
+  4: van
+  5: truck
+  6: tricycle
+  7: awning-tricycle
+  8: bus
+  9: motor
+scales:
+  # depth, width, max_channels
+  m: [0.67, 0.75, 768]
+
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, Conv, [64, 3, 2]]       # 0-P1/2
+  - [-1, 1, Conv, [128, 3, 2]]      # 1-P2/4
+  - [-1, 3, C2f, [128, True]]       # 2
+  - [-1, 1, Conv, [256, 3, 2]]      # 3-P3/8
+  - [-1, 6, C2f, [256, True]]       # 4
+  - [-1, 1, Conv, [512, 3, 2]]      # 5-P4/16
+  - [-1, 6, C2f, [512, True]]       # 6
+  - [-1, 1, Conv, [1024, 3, 2]]     # 7-P5/32
+  - [-1, 3, C2f, [1024, True]]     # 8
+  - [-1, 1, SPPF, [1024, 5]]       # 9
+
+head:
+  # FPN: top-down feature fusion
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]  # 10
+  - [[-1, 6], 1, Concat, [1]]                   # 11
+  - [-1, 3, C2f, [512]]                         # 12
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]  # 13
+  - [[-1, 4], 1, Concat, [1]]                   # 14
+  - [-1, 3, C2f, [256]]                         # 15 (P3)
+
+  # PAN: bottom-up feature fusion
+  - [-1, 1, Conv, [256, 3, 2]]                  # 16
+  - [[-1, 12], 1, Concat, [1]]                  # 17
+  - [-1, 3, C2f, [512]]                         # 18 (P4)
+  - [-1, 1, Conv, [512, 3, 2]]                  # 19
+  - [[-1, 9], 1, Concat, [1]]                   # 20
+  - [-1, 3, C2f, [1024]]                        # 21 (P5)
+
+  # Detect at P3, P4, P5 scales
+  - [[15, 18, 21], 1, Detect, [nc]]             # 22
